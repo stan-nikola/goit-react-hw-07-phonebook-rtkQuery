@@ -17,13 +17,6 @@ export const store = configureStore({
     contacts: contactsReducer,
     filter: contactsFilterReducer,
   },
-  // middleware(getDefaultMiddleware) {
-  //   return getDefaultMiddleware({
-  //     serializableCheck: {
-  //       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-  //     },
-  //   });
-  // },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {

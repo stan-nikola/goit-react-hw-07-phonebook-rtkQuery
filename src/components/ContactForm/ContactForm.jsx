@@ -25,7 +25,6 @@ import {
 const initialValues = { name: '', number: '' };
 
 export const ContactForm = ({ onSubmit, contacts, onClose }) => {
-  console.log(contacts);
   const handleSubmit = ({ name, number }, { resetForm }) => {
     const nameArr = contacts.map(contact => contact.name.toLowerCase());
     if (nameArr.includes(name.toLowerCase())) {

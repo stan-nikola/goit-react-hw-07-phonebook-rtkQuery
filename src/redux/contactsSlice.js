@@ -11,18 +11,18 @@ const persistConfig = {
 
 export const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: { contacts: data },
+  initialState: { contactsData: data },
 
   reducers: {
     addContact(state, action) {
-      state.contacts.push(action.payload);
+      state.contactsData.push(action.payload);
     },
 
     deleteContact(state, action) {
-      const index = state.contacts.findIndex(
+      const index = state.contactsData.findIndex(
         contact => contact.id === action.payload
       );
-      state.contacts.splice(index, 1);
+      state.contactsData.splice(index, 1);
     },
   },
 });
