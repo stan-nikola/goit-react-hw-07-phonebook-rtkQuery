@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Formik, ErrorMessage } from 'formik';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { mask } from 'constants/phoneValidate';
+import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
 import { Notification } from 'components/Notifications/Notifications';
 import { toastOptions } from 'settings/toastOptions';
@@ -29,7 +30,7 @@ export const ContactForm = ({ onSubmit, contactsArr, onClose }) => {
     if (nameArr.includes(name.toLowerCase())) {
       return toast.warn(`${name} is already in contacts.`, toastOptions);
     }
-    onSubmit(name, number);
+    onSubmit({ id: nanoid(), name, number });
     resetForm();
   };
   return (
