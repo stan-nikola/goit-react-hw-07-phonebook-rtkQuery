@@ -1,39 +1,32 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { ContactForm } from 'components/ContactForm/ContactForm';
-import { MdOutlineContactPhone } from 'react-icons/md';
-import { ContactList } from '../ContactList/ContactList';
-import { Filter } from '../Filter/Filter';
 import { getContacts, getContactsFilter } from 'redux/selectors';
-import { addContact, deleteContact } from 'redux/contactsSlice';
 import { contactsFilter } from 'redux/contactsFilterSlice';
-
-import { Box } from 'components/Box/Box';
-import { Title, SubTitle, Message } from './App.styled';
+import { addContact, deleteContact } from 'redux/contactsSlice';
+import { ContactForm } from 'components/ContactForm/ContactForm';
+import { ContactList } from '../ContactList/ContactList';
+import { ContactSearch } from '../contactSearch/contactSearch';
 import { Modal } from 'components/Modal/Modal';
 import { ModalBtn } from './App.styled';
+import { MdOutlineContactPhone } from 'react-icons/md';
+import { Box } from 'components/Box/Box';
+import { Title, SubTitle, Message } from './App.styled';
 
 export function App() {
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
-  const filter = useSelector(getContactsFilter);
+  const filter = useSelector(getContactsFilter).toLowerCase();
 
   const [showModal, setShowModal] = useState(false);
 
-  const getVisibleContacts = () => {
-    const normalizeFilter = filter.toLowerCase();
-    const visibleContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizeFilter)
-    );
-    return visibleContacts;
-  };
+  const visibleContacts = useMemo(
+    () =>
+      contacts.filter(contact => contact.name.toLowerCase().includes(filter)),
+    [contacts, filter]
+  );
 
   const onHandleSubmit = e => {
     dispatch(addContact(e));
-    toggleModal();
-  };
-
-  const toggleModal = () => {
     setShowModal(!showModal);
   };
 
@@ -52,15 +45,18 @@ export function App() {
     >
       <Box textAline="center" mb={30} as="section">
         <Title>PhoneBook</Title>
-        <ModalBtn onClick={toggleModal} aria-label="Add contact">
+        <ModalBtn
+          onClick={() => setShowModal(!showModal)}
+          aria-label="Add contact"
+        >
           <MdOutlineContactPhone /> Add contact
         </ModalBtn>
         {showModal && (
-          <Modal onClose={toggleModal}>
+          <Modal onClose={() => setShowModal(!showModal)}>
             <ContactForm
               onSubmit={onHandleSubmit}
-              contactsArr={contacts}
-              onClose={toggleModal}
+              contacts={contacts}
+              onClose={() => setShowModal(!showModal)}
             />
           </Modal>
         )}
@@ -68,23 +64,23 @@ export function App() {
       <Box as="section">
         <SubTitle>Contacts</SubTitle>
         {contacts.length > 1 && (
-          <Filter
+          <ContactSearch
             value={filter}
             onChange={e => dispatch(contactsFilter(e.currentTarget.value))}
           />
         )}
         {contacts.length < 1 ? (
-          <Message>There are no contacts in your phonebook</Message>
+          <Message>There are no contacts in your phone book</Message>
         ) : (
             <ContactList
-              contacts={getVisibleContacts()}
+              contacts={visibleContacts}
               onDeleteContact={e => dispatch(deleteContact(e))}
             />
-          ) && getVisibleContacts().length < 1 ? (
+          ) && visibleContacts.length < 1 ? (
           <Message>No matches for your search</Message>
         ) : (
           <ContactList
-            contacts={getVisibleContacts()}
+            contacts={visibleContacts}
             onDeleteContact={e => dispatch(deleteContact(e))}
           />
         )}

@@ -1,22 +1,22 @@
 import { LabelName } from 'components/ContactForm/ContactForm.styled';
 import PropTypes from 'prop-types';
-import { FilterLabel, InputFilterField } from './Filter.styled';
+import { SearchLabel, InputSearchField } from './contactSearch.styled';
 
-export const Filter = ({ value, onChange }) => {
+export const ContactSearch = ({ value, onChange }) => {
   return (
-    <FilterLabel>
+    <SearchLabel>
       <LabelName>Finds contacts by name</LabelName>
-      <InputFilterField
+      <InputSearchField
         type="text"
         name="filter"
         value={value}
         onChange={onChange}
       />
-    </FilterLabel>
+    </SearchLabel>
   );
 };
 
-Filter.propTypes = {
+ContactSearch.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };

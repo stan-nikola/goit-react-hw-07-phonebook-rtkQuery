@@ -24,9 +24,10 @@ import {
 
 const initialValues = { name: '', number: '' };
 
-export const ContactForm = ({ onSubmit, contactsArr, onClose }) => {
+export const ContactForm = ({ onSubmit, contacts, onClose }) => {
+  console.log(contacts);
   const handleSubmit = ({ name, number }, { resetForm }) => {
-    const nameArr = contactsArr.map(contact => contact.name.toLowerCase());
+    const nameArr = contacts.map(contact => contact.name.toLowerCase());
     if (nameArr.includes(name.toLowerCase())) {
       return toast.warn(`${name} is already in contacts.`, toastOptions);
     }
@@ -92,5 +93,5 @@ export const ContactForm = ({ onSubmit, contactsArr, onClose }) => {
 
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  contactsArr: PropTypes.array.isRequired,
+  contacts: PropTypes.array.isRequired,
 };

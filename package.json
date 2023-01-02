@@ -1,8 +1,8 @@
 {
-  "name": "goit-react-hw-04-phonebook",
+  "name": "goit-react-hw-06-phonebook",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://stan-nikola.github.io/goit-react-hw-04-phonebook/",
+  "homepage": "https://stan-nikola.github.io/goit-react-hw-06-phonebook/",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -22,6 +22,7 @@
     "react-scripts": "5.0.1",
     "react-text-mask": "^5.5.0",
     "react-toastify": "^9.1.1",
+    "redux-persist": "^6.0.0",
     "styled-components": "^5.3.6",
     "styled-system": "^5.1.5",
     "web-vitals": "^2.1.3",

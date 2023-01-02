@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const FilterLabel = styled.label`
+export const SearchLabel = styled.label`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,7 +9,7 @@ export const FilterLabel = styled.label`
   margin-bottom: ${p => p.theme.space[3]}px;
 `;
 
-export const InputFilterField = styled.input`
+export const InputSearchField = styled.input`
   height: 24px;
   min-width: 176px;
   border-radius: ${p => p.theme.radii.normal};
