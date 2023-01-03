@@ -1,9 +1,35 @@
-import PropTypes from 'prop-types';
-import { BsFillXCircleFill } from 'react-icons/bs';
-import { ContactItem, ContactBtn, ContactName } from './ContactList.styled';
+import { deleteContact } from 'redux/contactsSlice';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { useSelector } from 'react-redux';
+import { getContactsFilter } from 'redux/selectors';
 import { Box } from './../Box/Box';
+import { BsFillXCircleFill } from 'react-icons/bs';
+import {
+  ContactItem,
+  ContactBtn,
+  ContactName,
+  Message,
+} from './ContactList.styled';
 
-export const ContactList = ({ contacts, onDeleteContact }) => {
+export const ContactList = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getContactsFilter).toLowerCase();
+
+  const visibleContacts = useMemo(
+    () =>
+      contacts.filter(contact => contact.name.toLowerCase().includes(filter)),
+    [contacts, filter]
+  );
+  if (contacts.length < 1) {
+    return <Message>There are no contacts in your phone book</Message>;
+  }
+  if (visibleContacts.length < 1) {
+    return <Message>No matches for your search</Message>;
+  }
+
   return (
     <Box
       display="flex"
@@ -16,12 +42,15 @@ export const ContactList = ({ contacts, onDeleteContact }) => {
       boxShadow="items"
       p={2}
     >
-      {contacts.map(({ id, name, number }) => {
+      {visibleContacts.map(({ id, name, number }) => {
         return (
           <ContactItem key={id}>
             <ContactName>{name}:</ContactName>
             {number}
-            <ContactBtn type="button" onClick={() => onDeleteContact(id)}>
+            <ContactBtn
+              type="button"
+              onClick={() => dispatch(deleteContact(id))}
+            >
               <BsFillXCircleFill />
             </ContactBtn>
           </ContactItem>
@@ -29,15 +58,4 @@ export const ContactList = ({ contacts, onDeleteContact }) => {
       })}
     </Box>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  onDeleteContact: PropTypes.func.isRequired,
 };

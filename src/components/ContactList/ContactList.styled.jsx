@@ -19,7 +19,12 @@ export const ContactItem = styled.li`
     }
   }
 `;
-
+export const Message = styled.h3`
+  margin: 0 auto;
+  font-size: ${p => p.theme.fontSizes.m};
+  width: 312px;
+  text-align: center;
+`;
 export const ContactBtn = styled.button`
   border: ${p => p.theme.borders.none};
   background-color: transparent;

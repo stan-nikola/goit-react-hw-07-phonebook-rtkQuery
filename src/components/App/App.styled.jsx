@@ -13,12 +13,7 @@ export const SubTitle = styled.h2`
   margin-bottom: ${p => p.theme.space[3]}px;
 `;
 
-export const Message = styled.h3`
-  margin: 0 auto;
-  font-size: ${p => p.theme.fontSizes.m};
-  width: 312px;
-  text-align: center;
-`;
+
 
 export const ModalBtn = styled(Button)`
   display: flex;

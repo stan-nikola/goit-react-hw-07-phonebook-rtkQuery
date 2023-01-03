@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { Formik, ErrorMessage } from 'formik';
-import { MdOutlineContactPhone } from 'react-icons/md';
-import { mask } from 'constants/phoneValidate';
-import { nanoid } from 'nanoid';
+import { getContacts } from 'redux/selectors';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
 import { toast } from 'react-toastify';
+import { mask } from 'constants/phoneValidate';
 import { Notification } from 'components/Notifications/Notifications';
 import { toastOptions } from 'settings/toastOptions';
+import { MdOutlineContactPhone } from 'react-icons/md';
 import { FiX } from 'react-icons/fi';
 import { schema } from '../../constants/schema';
 
@@ -24,15 +26,22 @@ import {
 
 const initialValues = { name: '', number: '' };
 
-export const ContactForm = ({ onSubmit, contacts, onClose }) => {
-  const handleSubmit = ({ name, number }, { resetForm }) => {
-    const nameArr = contacts.map(contact => contact.name.toLowerCase());
-    if (nameArr.includes(name.toLowerCase())) {
-      return toast.warn(`${name} is already in contacts.`, toastOptions);
+export const ContactForm = ({ onClose }) => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
+  const handleSubmit = (e, { resetForm }) => {
+    const nameArray = contacts.map(({ name }) => name.toLowerCase());
+
+    if (nameArray.includes(e.name.toLowerCase())) {
+      return toast.warn(`${e.name} is already in contacts.`, toastOptions);
     }
-    onSubmit({ id: nanoid(), name, number });
+
+    dispatch(addContact(e));
     resetForm();
+    onClose();
   };
+
   return (
     <>
       <CloseModalBtn type="button" onClick={onClose}>
@@ -48,11 +57,11 @@ export const ContactForm = ({ onSubmit, contacts, onClose }) => {
           <Label>
             <LabelName>Name</LabelName>
             <InputField type="text" name="name" placeholder="Bruce Lee" />
-            <ErrorMessage name="name" component="div">
-              {msg => (
+            <ErrorMessage name="name" component="p">
+              {message => (
                 <ErrorMessageField>
                   {<ErrorIcon />}
-                  {msg}
+                  {message}
                 </ErrorMessageField>
               )}
             </ErrorMessage>
@@ -70,11 +79,11 @@ export const ContactForm = ({ onSubmit, contacts, onClose }) => {
               )}
             </InputField>
 
-            <ErrorMessage name="number" component="div">
-              {msg => (
+            <ErrorMessage name="number" component="p">
+              {message => (
                 <ErrorMessageField>
                   {<ErrorIcon />}
-                  {msg}
+                  {message}
                 </ErrorMessageField>
               )}
             </ErrorMessage>
@@ -92,5 +101,4 @@ export const ContactForm = ({ onSubmit, contacts, onClose }) => {
 
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  contacts: PropTypes.array.isRequired,
 };
