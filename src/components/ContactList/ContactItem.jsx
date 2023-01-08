@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
 import { deleteContact } from 'redux/operations';
 import { BsFillXCircleFill } from 'react-icons/bs';
 import PacmanLoader from 'react-spinners/PacmanLoader';
@@ -7,6 +8,7 @@ import { ContactList, ContactBtn, ContactName } from './ContactList.styled';
 import { overrideSmall } from 'constants/spinnerSettings';
 
 export const ContactListItem = ({ id, name, phone }) => {
+  const { isLoading: isDeleting } = useSelector(getContacts);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -26,6 +28,7 @@ export const ContactListItem = ({ id, name, phone }) => {
       ) : (
         <PacmanLoader
           color={'red'}
+          loading={isDeleting}
           cssOverride={overrideSmall}
           size={12}
           margin={1}
