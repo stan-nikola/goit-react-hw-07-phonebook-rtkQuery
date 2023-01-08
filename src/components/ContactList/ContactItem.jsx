@@ -8,13 +8,17 @@ import { ContactList, ContactBtn, ContactName } from './ContactList.styled';
 import { overrideSmall } from 'constants/spinnerSettings';
 
 export const ContactListItem = ({ id, name, phone }) => {
-  const { isLoading: isDeleting } = useSelector(getContacts);
+  const { error } = useSelector(getContacts);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const dispatch = useDispatch();
 
   const onHandleClick = () => {
     dispatch(deleteContact(id));
     setDeleteLoading(true);
+
+    if (error) {
+      setDeleteLoading(false);
+    }
   };
 
   return (
@@ -28,7 +32,7 @@ export const ContactListItem = ({ id, name, phone }) => {
       ) : (
         <PacmanLoader
           color={'red'}
-          loading={isDeleting}
+          loading={deleteLoading}
           cssOverride={overrideSmall}
           size={12}
           margin={1}

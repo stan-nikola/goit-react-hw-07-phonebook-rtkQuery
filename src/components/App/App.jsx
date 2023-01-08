@@ -20,7 +20,7 @@ export function App() {
   const [showModal, setShowModal] = useState(false);
 
   if (error) {
-    toast.warn(`Ups...${error}`, toastOptions);
+    toast.error(`Ups...${error}`, toastOptions);
   }
   return (
     <Box
