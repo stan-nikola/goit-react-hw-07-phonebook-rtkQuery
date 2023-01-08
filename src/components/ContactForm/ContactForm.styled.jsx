@@ -121,3 +121,7 @@ export const ErrorIcon = styled(FiAlertTriangle)`
   border: none;
   color: ${p => p.theme.colors.secondaryBorder};
 `;
+
+export const AddContactNotification = styled.p`
+  text-align: center;
+`;

@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { Formik, ErrorMessage } from 'formik';
 import { getContacts } from 'redux/selectors';
-import { useSelector, useDispatch } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/operations';
 import { toast } from 'react-toastify';
 import { mask } from 'constants/phoneValidate';
 import { Notification } from 'components/Notifications/Notifications';
@@ -10,6 +11,8 @@ import { toastOptions } from 'settings/toastOptions';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { FiX } from 'react-icons/fi';
 import { schema } from '../../constants/schema';
+import BarLoader from 'react-spinners/BarLoader';
+import { overrideModal } from 'constants/spinnerSettings';
 
 import {
   PbForm,
@@ -22,25 +25,34 @@ import {
   InputMaskField,
   ErrorIcon,
   CloseModalBtn,
+  AddContactNotification,
 } from './ContactForm.styled';
 
-const initialValues = { name: '', number: '' };
+const initialValues = { name: '', phone: '' };
 
 export const ContactForm = ({ onClose }) => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const { items, isLoading } = useSelector(getContacts);
 
   const handleSubmit = (e, { resetForm }) => {
-    const nameArray = contacts.map(({ name }) => name.toLowerCase());
+    const nameArray = items.map(({ name }) => name.toLowerCase());
 
     if (nameArray.includes(e.name.toLowerCase())) {
       return toast.warn(`${e.name} is already in contacts.`, toastOptions);
     }
-
     dispatch(addContact(e));
-    resetForm();
-    onClose();
+
+    if (isLoading) {
+      resetForm();
+    }
   };
+
+  useEffect(() => {
+    if (!isLoading) return;
+    return () => {
+      onClose();
+    };
+  }, [isLoading, onClose]);
 
   return (
     <>
@@ -68,7 +80,7 @@ export const ContactForm = ({ onClose }) => {
           </Label>
           <Label>
             <LabelName>Number</LabelName>
-            <InputField name="number">
+            <InputField name="phone">
               {({ field }) => (
                 <InputMaskField
                   {...field}
@@ -79,7 +91,7 @@ export const ContactForm = ({ onClose }) => {
               )}
             </InputField>
 
-            <ErrorMessage name="number" component="p">
+            <ErrorMessage name="phone" component="p">
               {message => (
                 <ErrorMessageField>
                   {<ErrorIcon />}
@@ -88,10 +100,26 @@ export const ContactForm = ({ onClose }) => {
               )}
             </ErrorMessage>
           </Label>
-          <SubmitBtn type="submit">
-            <MdOutlineContactPhone />
-            Add contact
-          </SubmitBtn>
+          {!isLoading ? (
+            <SubmitBtn type="submit">
+              <MdOutlineContactPhone />
+              Add contact
+            </SubmitBtn>
+          ) : (
+            <>
+              <BarLoader
+                color={'#1d9d00'}
+                loading={true}
+                cssOverride={overrideModal}
+                size={20}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <AddContactNotification>
+                Adding a contact...
+              </AddContactNotification>
+            </>
+          )}
         </PbForm>
       </Formik>
       <Notification />
@@ -100,5 +128,5 @@ export const ContactForm = ({ onClose }) => {
 };
 
 ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

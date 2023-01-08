@@ -1,8 +1,8 @@
 {
-  "name": "goit-react-hw-06-phonebook",
+  "name": "goit-react-hw-07-phonebook-rtk",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://stan-nikola.github.io/goit-react-hw-06-phonebook/",
+  "homepage": "https://stan-nikola.github.io/goit-react-hw-07-phonebook-rtk/",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -10,8 +10,8 @@
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.2.2",
     "formik": "^2.2.9",
-    "nanoid": "^4.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -20,6 +20,7 @@
     "react-phone-number-input": "^3.2.12",
     "react-redux": "^8.0.5",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.13.7",
     "react-text-mask": "^5.5.0",
     "react-toastify": "^9.1.1",
     "redux-persist": "^6.0.0",

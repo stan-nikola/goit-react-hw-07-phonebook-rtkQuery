@@ -8,7 +8,7 @@ export const schema = yup.object({
     .required(
       "Please enter name. For example Adrian, Jacob Mercer, Charles de Batz, Castelmore d'Artagnan"
     ),
-  number: yup
+  phone: yup
     .string()
     .required('Please enter phone number')
     .matches(phoneRegExp, 'Phone number is not valid'),

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const ContactItem = styled.li`
+export const ContactList = styled.li`
   display: flex;
 
   align-items: center;
@@ -26,14 +26,21 @@ export const Message = styled.h3`
   text-align: center;
 `;
 export const ContactBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: ${p => p.theme.borders.none};
   background-color: transparent;
+  width: 26px;
+  height: 26px;
+  padding: 0;
 
   cursor: pointer;
   svg {
     fill: #ce2727;
     width: 26px;
-    height: 24px;
+    height: 26px;
+
     transition: fill 250ms linear;
     &:hover,
     &:focus {
