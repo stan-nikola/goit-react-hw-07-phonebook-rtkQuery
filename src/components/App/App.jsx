@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { ContactList } from '../ContactList/ContactList';
 import { ContactSearch } from '../contactSearch/contactSearch';
@@ -14,11 +13,13 @@ import { toastOptions } from 'settings/toastOptions';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { Title, SubTitle } from './App.styled';
 import { overrideMain } from 'constants/spinnerSettings';
+import { useGetContactsQuery } from 'redux/contactsSlice';
 
 export function App() {
-  const { items, isLoading, error } = useSelector(getContacts);
+  const { data, error, isLoading } = useGetContactsQuery();
   const [showModal, setShowModal] = useState(false);
-
+  const state = useSelector(state => state);
+  console.log(state);
   if (error) {
     toast.error(`Ups...${error}`, toastOptions);
   }
@@ -51,8 +52,8 @@ export function App() {
       </Box>
       <Box as="section">
         <SubTitle>Contacts</SubTitle>
-        {items.length > 1 && <ContactSearch />}
-        <ContactList />
+        {data && data?.length > 1 && <ContactSearch />}
+        {data && <ContactList />}
       </Box>
       <PropagateLoader
         color={'#ff0000'}

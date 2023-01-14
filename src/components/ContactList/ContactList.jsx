@@ -1,28 +1,22 @@
 // import { deleteContact } from 'redux/contactsSlice';
 import { useMemo } from 'react';
-import { useEffect } from 'react';
-import { getContacts } from 'redux/selectors';
-import { useDispatch, useSelector } from 'react-redux';
+import { useGetContactsQuery } from 'redux/contactsSlice';
+import { useSelector } from 'react-redux';
 import { getContactsFilter } from 'redux/selectors';
-import { fetchContacts } from 'redux/operations';
+
 import { Box } from './../Box/Box';
 import { Message } from './ContactList.styled';
 import { ContactListItem } from './ContactItem';
 
 export const ContactList = () => {
-  const dispatch = useDispatch();
-  const { items } = useSelector(getContacts);
+  const { data } = useGetContactsQuery();
   const filter = useSelector(getContactsFilter).toLowerCase();
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
   const visibleContacts = useMemo(
-    () => items.filter(item => item.name.toLowerCase().includes(filter)),
-    [items, filter]
+    () => data.filter(item => item.name.toLowerCase().includes(filter)),
+    [data, filter]
   );
-  if (items.length < 1) {
+  if (data.length < 1) {
     return <Message>There are no contacts in your phone book</Message>;
   }
   if (visibleContacts.length < 1) {
