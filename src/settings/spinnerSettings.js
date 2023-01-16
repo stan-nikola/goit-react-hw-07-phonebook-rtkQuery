@@ -10,8 +10,5 @@ export const overrideModal = {
 };
 
 export const overrideSmall = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  rotate: '180deg',
+  left: '-3px',
 };

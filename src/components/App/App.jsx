@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { ContactList } from '../ContactList/ContactList';
-import { ContactSearch } from '../contactSearch/contactSearch';
+import { ContactSearch } from '../contactSearch/ContactSearch1';
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import { Modal } from 'components/Modal/Modal';
 import { Box } from 'components/Box/Box';
@@ -12,16 +12,17 @@ import { Notification } from 'components/Notifications/Notifications';
 import { toastOptions } from 'settings/toastOptions';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { Title, SubTitle } from './App.styled';
-import { overrideMain } from 'constants/spinnerSettings';
+import { overrideMain } from 'settings/spinnerSettings';
 import { useGetContactsQuery } from 'redux/contactsSlice';
 
 export function App() {
   const { data, error, isLoading } = useGetContactsQuery();
   const [showModal, setShowModal] = useState(false);
-  const state = useSelector(state => state);
-  console.log(state);
+  // const state = useSelector(state => state);
+  // console.log(state);
   if (error) {
-    toast.error(`Ups...${error}`, toastOptions);
+    console.log(error);
+    toast.error(`Ups...${error.data}`, toastOptions);
   }
   return (
     <Box

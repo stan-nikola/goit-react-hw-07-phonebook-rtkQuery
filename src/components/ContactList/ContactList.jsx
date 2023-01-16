@@ -6,7 +6,7 @@ import { getContactsFilter } from 'redux/selectors';
 
 import { Box } from './../Box/Box';
 import { Message } from './ContactList.styled';
-import { ContactListItem } from './ContactItem';
+import { ContactListItem } from './ContactListItem';
 
 export const ContactList = () => {
   const { data } = useGetContactsQuery();

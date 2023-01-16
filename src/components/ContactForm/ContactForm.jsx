@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { Formik, ErrorMessage } from 'formik';
-import { getContacts } from 'redux/selectors';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/operations';
+import {
+  useGetContactsQuery,
+  useAddContactMutation,
+} from 'redux/contactsSlice';
 import { toast } from 'react-toastify';
 import { mask } from 'constants/phoneValidate';
 import { Notification } from 'components/Notifications/Notifications';
@@ -12,7 +13,7 @@ import { MdOutlineContactPhone } from 'react-icons/md';
 import { FiX } from 'react-icons/fi';
 import { schema } from '../../constants/schema';
 import BarLoader from 'react-spinners/BarLoader';
-import { overrideModal } from 'constants/spinnerSettings';
+import { overrideModal } from 'settings/spinnerSettings';
 
 import {
   PbForm,
@@ -31,17 +32,19 @@ import {
 const initialValues = { name: '', phone: '' };
 
 export const ContactForm = ({ onClose }) => {
-  const dispatch = useDispatch();
-  const { items, isLoading } = useSelector(getContacts);
+  const [addContact, { isLoading, error }] = useAddContactMutation();
+  const { data: items } = useGetContactsQuery();
 
-  const handleSubmit = (e, { resetForm }) => {
-    const nameArray = items.map(({ name }) => name.toLowerCase());
+  const handleSubmit = async (e, { resetForm }) => {
+    const nameArray = await items.map(({ name }) => name.toLowerCase());
 
     if (nameArray.includes(e.name.toLowerCase())) {
       return toast.warn(`${e.name} is already in contacts.`, toastOptions);
     }
-    dispatch(addContact(e));
-
+    if (error) {
+      return toast.error(`${error.data}`, toastOptions);
+    }
+    await addContact(e);
     if (isLoading) {
       resetForm();
     }
