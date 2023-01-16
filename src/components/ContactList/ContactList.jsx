@@ -8,7 +8,7 @@ import { Box } from './../Box/Box';
 import { Message } from './ContactList.styled';
 import { ContactListItem } from './ContactListItem';
 
-export const ContactList = () => {
+export const ContactList = ({ modalToggle }) => {
   const { data } = useGetContactsQuery();
   const filter = useSelector(getContactsFilter).toLowerCase();
 
@@ -35,8 +35,14 @@ export const ContactList = () => {
       boxShadow="items"
       p={2}
     >
-      {visibleContacts.map(items => {
-        return <ContactListItem key={items.id} {...items}></ContactListItem>;
+      {visibleContacts.map(item => {
+        return (
+          <ContactListItem
+            key={item.id}
+            modalToggle={() => modalToggle(item.id)}
+            {...item}
+          ></ContactListItem>
+        );
       })}
     </Box>
   );

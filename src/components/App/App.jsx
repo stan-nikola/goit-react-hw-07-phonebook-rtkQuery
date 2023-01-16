@@ -18,8 +18,14 @@ import { useGetContactsQuery } from 'redux/contactsSlice';
 export function App() {
   const { data, error, isLoading } = useGetContactsQuery();
   const [showModal, setShowModal] = useState(false);
+  const [contactId, setContactId] = useState('null');
   // const state = useSelector(state => state);
   // console.log(state);
+
+  const modalToggle = id => {
+    setShowModal(!showModal);
+    setContactId(id);
+  };
   if (error) {
     console.log(error);
     toast.error(`Ups...${error.data}`, toastOptions);
@@ -39,22 +45,19 @@ export function App() {
     >
       <Box textAline="center" mb={30} as="section">
         <Title>PhoneBook</Title>
-        <ModalBtn
-          onClick={() => setShowModal(!showModal)}
-          aria-label="Add contact"
-        >
+        <ModalBtn onClick={modalToggle} aria-label="Add contact">
           <MdOutlineContactPhone /> Add contact
         </ModalBtn>
         {showModal && (
-          <Modal onClose={() => setShowModal(!showModal)}>
-            <ContactForm onClose={() => setShowModal(!showModal)} />
+          <Modal onClose={modalToggle}>
+            <ContactForm onClose={modalToggle} contactId={contactId} />
           </Modal>
         )}
       </Box>
       <Box as="section">
         <SubTitle>Contacts</SubTitle>
         {data && data?.length > 1 && <ContactSearch />}
-        {data && <ContactList />}
+        {data && <ContactList modalToggle={modalToggle} />}
       </Box>
       <PropagateLoader
         color={'#ff0000'}

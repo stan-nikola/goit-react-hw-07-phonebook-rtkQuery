@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Formik, ErrorMessage } from 'formik';
 import {
   useGetContactsQuery,
   useAddContactMutation,
+  useUpdateContactMutation,
 } from 'redux/contactsSlice';
 import { toast } from 'react-toastify';
 import { mask } from 'constants/phoneValidate';
@@ -29,11 +30,24 @@ import {
   AddContactNotification,
 } from './ContactForm.styled';
 
-const initialValues = { name: '', phone: '' };
+export const ContactForm = ({ onClose, contactId }) => {
+  let initialValues = { name: '', phone: '' };
+  const [buttonText, setButtonText] = useState();
 
-export const ContactForm = ({ onClose }) => {
-  const [addContact, { isLoading, error }] = useAddContactMutation();
+  const [addContact, { isLoading: addLoading, error }] =
+    useAddContactMutation();
+  const [updateContact, { isLoading: updateLoading }] =
+    useUpdateContactMutation();
   const { data: items } = useGetContactsQuery();
+
+  if (contactId.currentTarget !== null) {
+    const finnedContactById = items.find(item => item.id === contactId);
+
+    initialValues = {
+      name: finnedContactById.name,
+      phone: finnedContactById.phone,
+    };
+  }
 
   const handleSubmit = async (e, { resetForm }) => {
     const nameArray = await items.map(({ name }) => name.toLowerCase());
@@ -44,18 +58,30 @@ export const ContactForm = ({ onClose }) => {
     if (error) {
       return toast.error(`${error.data}`, toastOptions);
     }
-    await addContact(e);
-    if (isLoading) {
+    if (contactId.currentTarget !== null) {
+      console.log(e);
+      await updateContact({ id: contactId, ...e });
+    } else {
+      await addContact(e);
+    }
+
+    if (addLoading && updateLoading) {
       resetForm();
     }
   };
-
   useEffect(() => {
-    if (!isLoading) return;
+    if (contactId.currentTarget !== null) {
+      setButtonText('Update contact');
+    } else {
+      setButtonText('Add contact');
+    }
+  }, [contactId.currentTarget]);
+  useEffect(() => {
+    if (!addLoading && !updateLoading) return;
     return () => {
       onClose();
     };
-  }, [isLoading, onClose]);
+  }, [addLoading, updateLoading, onClose]);
 
   return (
     <>
@@ -103,10 +129,10 @@ export const ContactForm = ({ onClose }) => {
               )}
             </ErrorMessage>
           </Label>
-          {!isLoading ? (
+          {!addLoading && !updateLoading ? (
             <SubmitBtn type="submit">
               <MdOutlineContactPhone />
-              Add contact
+              {buttonText}
             </SubmitBtn>
           ) : (
             <>
@@ -118,9 +144,16 @@ export const ContactForm = ({ onClose }) => {
                 aria-label="Loading Spinner"
                 data-testid="loader"
               />
-              <AddContactNotification>
-                Adding a contact...
-              </AddContactNotification>
+              {addLoading && (
+                <AddContactNotification>
+                  Adding a contact...
+                </AddContactNotification>
+              )}
+              {updateLoading && (
+                <AddContactNotification>
+                  Updating a contact...
+                </AddContactNotification>
+              )}
             </>
           )}
         </PbForm>

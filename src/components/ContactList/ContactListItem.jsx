@@ -4,13 +4,16 @@ import HashLoader from 'react-spinners/HashLoader';
 import { ContactList, ContactBtn, ContactName } from './ContactList.styled';
 import { overrideSmall } from 'settings/spinnerSettings';
 
-export const ContactListItem = ({ id, name, phone }) => {
+export const ContactListItem = ({ id, name, phone, modalToggle }) => {
   const [deleteContact, { isLoading }] = useDeleteContactMutation();
 
   return (
     <ContactList>
       <ContactName>{name}:</ContactName>
       {phone}
+      <button type="button" onClick={modalToggle}>
+        <BsFillXCircleFill />
+      </button>
       {!isLoading ? (
         <ContactBtn type="button" onClick={() => deleteContact(id)}>
           <BsFillXCircleFill />
