@@ -9,7 +9,7 @@ import {
 import { toast } from 'react-toastify';
 import { mask } from 'constants/phoneValidate';
 import { Notification } from 'components/Notifications/Notifications';
-import { toastOptions } from 'settings/toastOptions';
+import { toastOptionsMain, toastOptionsWarn } from 'settings/toastOptions';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { FiX } from 'react-icons/fi';
 import { schema } from '../../constants/schema';
@@ -31,12 +31,12 @@ import {
 } from './ContactForm.styled';
 
 export const ContactForm = ({ onClose, contactId }) => {
-  let initialValues = { name: '', phone: '' };
-  const [buttonText, setButtonText] = useState();
+  let initialValues = { name: '', phone: 0 };
 
-  const [addContact, { isLoading: addLoading, error }] =
+  const [buttonText, setButtonText] = useState();
+  const [addContact, { isLoading: addLoading, error: addError }] =
     useAddContactMutation();
-  const [updateContact, { isLoading: updateLoading }] =
+  const [updateContact, { isLoading: updateLoading, error: updateError }] =
     useUpdateContactMutation();
   const { data: items } = useGetContactsQuery();
 
@@ -50,19 +50,33 @@ export const ContactForm = ({ onClose, contactId }) => {
   }
 
   const handleSubmit = async (e, { resetForm }) => {
-    const nameArray = await items.map(({ name }) => name.toLowerCase());
+    const duplicateContactData = items.find(
+      item => item.name === e.name || item.phone === e.phone
+    );
 
-    if (nameArray.includes(e.name.toLowerCase())) {
-      return toast.warn(`${e.name} is already in contacts.`, toastOptions);
+    if (
+      duplicateContactData?.name === e.name &&
+      duplicateContactData?.phone === e.phone
+    ) {
+      toast.warning(
+        `${duplicateContactData.name} with ${duplicateContactData.phone} already exist on your phone book, please check`,
+        toastOptionsWarn
+      );
+      return;
     }
-    if (error) {
-      return toast.error(`${error.data}`, toastOptions);
+
+    if (addError || updateError) {
+      return toast.error(
+        `${addError.status || updateError.status} `,
+        toastOptionsMain
+      );
     }
     if (contactId.currentTarget !== null) {
-      console.log(e);
       await updateContact({ id: contactId, ...e });
+      toast.success(`${e.name}  ${e.phone} updated`, toastOptionsMain);
     } else {
       await addContact(e);
+      toast.success(`${e.name} ${e.phone} added`, toastOptionsMain);
     }
 
     if (addLoading && updateLoading) {
@@ -114,7 +128,7 @@ export const ContactForm = ({ onClose, contactId }) => {
                 <InputMaskField
                   {...field}
                   mask={mask}
-                  placeholder="(012)-345-6789"
+                  placeholder="+3 8-(123)-456-7890"
                   type="tel"
                 />
               )}

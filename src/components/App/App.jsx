@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// import { useSelector } from 'react-redux';
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { ContactList } from '../ContactList/ContactList';
 import { ContactSearch } from '../contactSearch/ContactSearch';
@@ -9,7 +8,7 @@ import { Box } from 'components/Box/Box';
 import { ModalBtn } from './App.styled';
 import { toast } from 'react-toastify';
 import { Notification } from 'components/Notifications/Notifications';
-import { toastOptions } from 'settings/toastOptions';
+import { toastOptionsMain } from 'settings/toastOptions';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { Title, SubTitle } from './App.styled';
 import { overrideMain } from 'settings/spinnerSettings';
@@ -19,16 +18,13 @@ export function App() {
   const { data, error, isLoading } = useGetContactsQuery();
   const [showModal, setShowModal] = useState(false);
   const [contactId, setContactId] = useState('null');
-  // const state = useSelector(state => state);
-  // console.log(state);
 
   const modalToggle = id => {
     setShowModal(!showModal);
     setContactId(id);
   };
   if (error) {
-    console.log(error);
-    toast.error(`Ups...${error.data}`, toastOptions);
+    toast.error(`Ups...${error.data}`, toastOptionsMain);
   }
   return (
     <Box
