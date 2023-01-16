@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getContactsFilter } from 'redux/selectors';
 import { contactsFilter } from 'redux/contactsFilterSlice';
 import { LabelName } from 'components/ContactForm/ContactForm.styled';
-import { SearchLabel, InputSearchField } from './ContactSearch1.styled';
+import { SearchLabel, InputSearchField } from './ContactSearch.styled';
 
 export const ContactSearch = () => {
   const dispatch = useDispatch();

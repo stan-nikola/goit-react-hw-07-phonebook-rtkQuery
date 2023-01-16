@@ -2,7 +2,7 @@ import { useState } from 'react';
 // import { useSelector } from 'react-redux';
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { ContactList } from '../ContactList/ContactList';
-import { ContactSearch } from '../contactSearch/ContactSearch1';
+import { ContactSearch } from '../contactSearch/ContactSearch';
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import { Modal } from 'components/Modal/Modal';
 import { Box } from 'components/Box/Box';
